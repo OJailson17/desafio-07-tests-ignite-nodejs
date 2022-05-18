@@ -17,4 +17,22 @@ describe("Create a new user", () => {
 
     expect(user).toHaveProperty("id");
   });
+
+  it("should not be able to create a new user with the same email", async () => {
+    try {
+      await usersRepository.create({
+        name: "Test name",
+        email: "test@test.com",
+        password: "test123",
+      });
+
+      await usersRepository.create({
+        name: "Test name",
+        email: "test@test.com",
+        password: "test123",
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(CreateUserError);
+    }
+  });
 });
