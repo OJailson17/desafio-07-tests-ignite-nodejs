@@ -37,13 +37,11 @@ describe("Authenticate user", () => {
 
   it("should not be able to authenticate the user with wrong email address", async () => {
     expect(async () => {
-      const user: ICreateUserDTO = {
+      const user = await usersRepository.create({
         name: "Test name auth",
         email: "test123@t.com",
         password: "test1234",
-      };
-
-      await createUserUseCase.execute(user);
+      });
 
       await authenticateUserUseCase.execute({
         email: "test12@test.com",
@@ -54,17 +52,15 @@ describe("Authenticate user", () => {
 
   it("should not be able to authenticate the user with wrong password", async () => {
     expect(async () => {
-      const user: ICreateUserDTO = {
+      const user = await usersRepository.create({
         name: "Test name auth",
         email: "test123@test.com",
-        password: "test1234",
-      };
-
-      await createUserUseCase.execute(user);
+        password: "test123",
+      });
 
       await authenticateUserUseCase.execute({
         email: user.email,
-        password: "8782918",
+        password: "9090",
       });
     }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
   });
