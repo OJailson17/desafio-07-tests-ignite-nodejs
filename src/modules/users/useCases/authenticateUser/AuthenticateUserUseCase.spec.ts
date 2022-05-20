@@ -1,3 +1,4 @@
+import { AppError } from "../../../../shared/errors/AppError";
 import { InMemoryUsersRepository } from "../../repositories/in-memory/InMemoryUsersRepository";
 import { CreateUserUseCase } from "../createUser/CreateUserUseCase";
 import { ICreateUserDTO } from "../createUser/ICreateUserDTO";
@@ -38,18 +39,16 @@ describe("Authenticate user", () => {
     expect(async () => {
       const user: ICreateUserDTO = {
         name: "Test name auth",
-        email: "test123@test.com",
+        email: "test123@t.com",
         password: "test1234",
       };
 
       await createUserUseCase.execute(user);
 
-      const authUser = {
+      await authenticateUserUseCase.execute({
         email: "test12@test.com",
         password: user.password,
-      };
-
-      await authenticateUserUseCase.execute(authUser);
+      });
     }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
   });
 
@@ -63,12 +62,10 @@ describe("Authenticate user", () => {
 
       await createUserUseCase.execute(user);
 
-      const authUser = {
+      await authenticateUserUseCase.execute({
         email: user.email,
         password: "8782918",
-      };
-
-      await authenticateUserUseCase.execute(authUser);
+      });
     }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError);
   });
 });
